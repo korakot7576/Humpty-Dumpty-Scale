@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบประเมินความเสี่ยงการพลัดตกหกล้มในเด็ก</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid #eee;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    label:hover {
+      background-color: #f5f5f5;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    .score {
+      font-weight: bold;
+      color: #555;
+      background-color: #e9ecef;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+    .results, .criteria {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+    #riskLevel {
+      font-weight: bold;
+    }
+    #clearBtn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background-color: #dc3545;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.2s;
+    }
+    #clearBtn:hover {
+      background-color: #c82333;
+    }
+    .criteria ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .criteria li {
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      label {
+        font-size: 0.9rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .score {
+        margin-top: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>แบบประเมินความเสี่ยงการพลัดตกหกล้มในเด็ก (Humpty Dumpty Scale)</h1>
+
+  <form id="fallForm" onsubmit="return false;">
+    <div id="questions"></div>
+
+    <div class="results">
+      <h3>คะแนนรวม: <span id="total">0</span></h3>
+      <h3>ระดับความเสี่ยง: <span id="riskLevel">-</span></h3>
+    </div>
+    
+    <div class="criteria">
+        <h3>เกณฑ์การแปลผล</h3>
+        <ul>
+            <li><strong>ความเสี่ยงต่ำ (Low Risk):</strong> คะแนน 7-11</li>
+            <li><strong>ความเสี่ยงปานกลาง (Moderate Risk):</strong> คะแนน 12-16</li>
+            <li><strong>ความเสี่ยงสูง (High Risk):</strong> คะแนน 17 คะแนนขึ้นไป</li>
+        </ul>
+    </div>
+    
+    <button type="button" id="clearBtn" onclick="clearForm()">ล้างข้อมูล (Clear Data)</button>
+  </form>
+
+  <script>
+    const questions = [
+      {
+        title: "1. อายุ (Age)",
+        options: [["ต่ำกว่า 3 ปี", 4], ["3 – 7 ปี", 3], ["7 - 13 ปี", 2], ["มากกว่า 13 ปี", 1]]
+      },
+      {
+        title: "2. เพศ (Gender)",
+        options: [["ชาย", 2], ["หญิง", 1]]
+      },
+      {
+        title: "3. การวินิจฉัยโรค (Diagnosis)",
+        options: [
+          ["โรคทางระบบประสาท / การมองเห็น / การเคลื่อนไหว", 4],
+          ["พร่องออกซิเจน (หอบ เหนื่อย มึน ฯลฯ)", 3],
+          ["โรคจิต / พฤติกรรมเปลี่ยนแปลง", 2],
+          ["โรคอื่นๆ", 1]
+        ]
+      },
+      {
+        title: "4. การรับรู้ (Cognitive Impairments)",
+        options: [
+          ["รับรู้บกพร่อง / ทารก", 3],
+          ["รับรู้แต่ไม่ปฏิบัติตาม", 2],
+          ["รับรู้และปฏิบัติตาม", 1]
+        ]
+      },
+      {
+        title: "5. สิ่งแวดล้อม (Environmental Factors)",
+        options: [
+          ["เคยพลัดตก หรือทารกนอนเตียง", 4],
+          ["ใช้อุปกรณ์ช่วย / มีสาย", 3],
+          ["นอนเตียง", 2],
+          ["เดินได้เอง", 1]
+        ]
+      },
+      {
+        title: "6. หลังผ่าตัด",
+        options: [
+          ["ภายใน 24 ชั่วโมง", 3],
+          ["ภายใน 48 ชั่วโมง", 2],
+          ["มากกว่า 48 ชม. / ไม่ได้ผ่าตัด", 1]
+        ]
+      },
+      {
+        title: "7. การได้รับยา",
+        options: [
+          ["ได้รับยาที่มีผลต่อความรู้สึกตัว / ความดัน", 4],
+          ["ได้รับยาข้างต้นมากกว่า 1 ชนิด", 3],
+          ["ได้รับยาข้างต้น 1 ชนิด", 2],
+          ["ไม่ได้รับ / ยาอื่น", 1]
+        ]
+      }
+    ];
+
+    const formDiv = document.getElementById("questions");
+    questions.forEach((q, i) => {
+      const section = document.createElement("div");
+      section.className = "section";
+      let optionsHTML = "";
+      q.options.forEach(([text, value], j) => {
+        const id = `q${i}_opt${j}`;
+        optionsHTML += `
+          <label for="${id}">
+            <span><input type="radio" name="q${i}" id="${id}" value="${value}" onchange="updateScore()"> ${text}</span>
+            <span class="score">${value} คะแนน</span>
+          </label>
+        `;
+      });
+      section.innerHTML = `<div class="question">${q.title}</div>${optionsHTML}`;
+      formDiv.appendChild(section);
+    });
+
+    function updateScore() {
+      let total = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) total += parseInt(selected.value);
+      }
+      document.getElementById("total").textContent = total;
+
+      let risk = "-";
+      let riskColor = "#333";
+      if (total >= 17) {
+        risk = "ความเสี่ยงสูง (High Risk)";
+        riskColor = "#dc3545"; // Red
+      } else if (total >= 12) {
+        risk = "ความเสี่ยงปานกลาง (Moderate Risk)";
+        riskColor = "#ffc107"; // Yellow/Orange
+      } else if (total >= 7) {
+        risk = "ความเสี่ยงต่ำ (Low Risk)";
+        riskColor = "#28a745"; // Green
+      }
+      const riskLevelEl = document.getElementById("riskLevel");
+      riskLevelEl.textContent = risk;
+      riskLevelEl.style.color = riskColor;
+    }
+
+    function clearForm() {
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach(radio => radio.checked = false);
+      updateScore();
+      // เลื่อนหน้าจอไปด้านบนสุด
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initial call to set default state
+    updateScore();
+  </script>
+</body>
+</html>
